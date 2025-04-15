@@ -12,7 +12,7 @@ import java.util.Date;
 import src.PromptWindows.*;
 
 public class TaskifyApp extends javax.swing.JFrame {
-    
+
     public TaskifyApp() {
         initComponents();
         setLocationRelativeTo(null);
@@ -34,6 +34,8 @@ public class TaskifyApp extends javax.swing.JFrame {
         container = new javax.swing.JPanel();
         tabPanel = new javax.swing.JTabbedPane();
         menuPanel = new javax.swing.JPanel();
+        logOutButton = new javax.swing.JButton();
+        currentUsername = new javax.swing.JLabel();
         tasksPanel = new javax.swing.JPanel();
         taskListContainer = new javax.swing.JPanel();
         taskEntries = new javax.swing.JTabbedPane();
@@ -59,15 +61,41 @@ public class TaskifyApp extends javax.swing.JFrame {
         menuPanel.setForeground(new java.awt.Color(255, 255, 255));
         menuPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        logOutButton.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        logOutButton.setForeground(new java.awt.Color(255, 255, 255));
+        logOutButton.setText("Log out");
+        logOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logOutButtonActionPerformed(evt);
+            }
+        });
+
+        currentUsername.setFont(new java.awt.Font("Monospaced", 0, 24)); // NOI18N
+        currentUsername.setForeground(new java.awt.Color(255, 255, 255));
+        currentUsername.setText("[Username here]");
+
         javax.swing.GroupLayout menuPanelLayout = new javax.swing.GroupLayout(menuPanel);
         menuPanel.setLayout(menuPanelLayout);
         menuPanelLayout.setHorizontalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1038, Short.MAX_VALUE)
+            .addGroup(menuPanelLayout.createSequentialGroup()
+                .addGroup(menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addGap(454, 454, 454)
+                        .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(menuPanelLayout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(currentUsername)))
+                .addContainerGap(454, Short.MAX_VALUE))
         );
         menuPanelLayout.setVerticalGroup(
             menuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 516, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuPanelLayout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addComponent(currentUsername)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 368, Short.MAX_VALUE)
+                .addComponent(logOutButton)
+                .addGap(40, 40, 40))
         );
 
         tabPanel.addTab("Menu", menuPanel);
@@ -230,14 +258,11 @@ public class TaskifyApp extends javax.swing.JFrame {
         int selectedIndex = taskEntries.getSelectedIndex();
         if (selectedIndex != -1) {
             String taskTitle = taskEntries.getTitleAt(selectedIndex);
-
             int confirm = JOptionPane.showConfirmDialog(this, 
                 "Are you sure you want to delete the task: " + taskTitle + "?", 
                 "Confirm Delete", JOptionPane.YES_NO_OPTION);
-
             if (confirm == JOptionPane.YES_OPTION) {
                 boolean success = TaskDatabase.deleteTask(taskTitle);
-
                 if (success) {
                     taskEntries.remove(selectedIndex);
                     JOptionPane.showMessageDialog(this, "Task deleted successfully.");
@@ -252,9 +277,14 @@ public class TaskifyApp extends javax.swing.JFrame {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         EditTaskWindow displayEditWindow = new EditTaskWindow(this);
-        
         displayEditWindow.setVisible(true);
     }//GEN-LAST:event_editButtonActionPerformed
+
+    private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        new LogIn().setVisible(true);
+        
+        this.dispose();
+    }//GEN-LAST:event_logOutButtonActionPerformed
 
     public void addTaskToPanel(String title, String description, Date deadline) {
         TaskDatabase.insertTask(title, description, deadline);
@@ -318,7 +348,9 @@ public class TaskifyApp extends javax.swing.JFrame {
     private javax.swing.JPanel calendarContainer;
     private javax.swing.JPanel calendarPanel;
     private javax.swing.JPanel container;
+    private javax.swing.JLabel currentUsername;
     private javax.swing.JButton editButton;
+    private javax.swing.JButton logOutButton;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JButton removeTaskButton;
     private javax.swing.JTabbedPane tabPanel;

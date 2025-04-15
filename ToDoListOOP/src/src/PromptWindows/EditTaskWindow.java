@@ -122,8 +122,8 @@ public class EditTaskWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-        JTabbedPane taskTabs = taskifyApp.getTaskEntries();
-        Component selected = taskTabs.getSelectedComponent();
+        JTabbedPane taskEntries = taskifyApp.getTaskEntries();
+        Component selected = taskEntries.getSelectedComponent();
 
         String getTitle = titleField.getText();
         String getDescription = descTextArea.getText();
@@ -137,7 +137,7 @@ public class EditTaskWindow extends javax.swing.JFrame {
             return;
         }
 
-        String originalTitle = taskTabs.getTitleAt(taskTabs.getSelectedIndex());
+        String originalTitle = taskEntries.getTitleAt(taskEntries.getSelectedIndex());
 
         boolean success = TaskDatabase.updateTask(originalTitle, getTitle, getDescription, deadline);
 
@@ -161,21 +161,23 @@ public class EditTaskWindow extends javax.swing.JFrame {
                                 String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(deadline);
                                 ((JLabel) comp).setText(formattedDate);
                                 break;
-                        }
-                    }
-                    System.out.println("Task updated successfully.");
+                        } 
+                        comp.invalidate();
+                        comp.validate();
+                        comp.repaint();
+                    } 
+                    taskEntries.revalidate();
+                    taskEntries.repaint();
+                    JOptionPane.showMessageDialog(this, "Task updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    System.out.println("Selected tab is not a JPanel.");
+                    JOptionPane.showMessageDialog(this, "Selected tab is not a task panel.", "Warning", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
-                System.out.println("TaskifyApp reference is null!");
+                JOptionPane.showMessageDialog(this, "Something went wrong. App reference is null.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            System.out.println("Failed to update task in the database.");
-        } taskTabs.revalidate();
-        taskTabs.repaint();
-        
-        this.dispose();
+            JOptionPane.showMessageDialog(this, "Failed to update task in the database.", "Error", JOptionPane.ERROR_MESSAGE);
+        } this.dispose();
     }//GEN-LAST:event_confirmButtonActionPerformed
     
     public static void main(String args[]) {
