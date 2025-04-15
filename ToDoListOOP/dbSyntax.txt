@@ -11,3 +11,10 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(50)
 );
+
+CREATE TABLE task (
+    taskID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    taskTitle VARCHAR(255),
+    taskDescription VARCHAR(255),
+    taskDeadline DATE,
+);
