@@ -11,7 +11,7 @@ public class InsertUserToDatabase {
         String url = "jdbc:mysql://localhost:3306/ToDoList";
         String username = "root";
         String password = "";
-
+        
         return DriverManager.getConnection(url, username, password);
     }
 

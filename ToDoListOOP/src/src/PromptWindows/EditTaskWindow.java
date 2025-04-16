@@ -123,7 +123,7 @@ public class EditTaskWindow extends javax.swing.JFrame {
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         JTabbedPane taskEntries = taskifyApp.getTaskEntries();
-        Component selected = taskEntries.getSelectedComponent();
+        int selectedIndex = taskEntries.getSelectedIndex();
 
         String getTitle = titleField.getText();
         String getDescription = descTextArea.getText();
@@ -137,47 +137,41 @@ public class EditTaskWindow extends javax.swing.JFrame {
             return;
         }
 
-        String originalTitle = taskEntries.getTitleAt(taskEntries.getSelectedIndex());
-
+        String originalTitle = taskEntries.getTitleAt(selectedIndex);
+        
         boolean success = TaskDatabase.updateTask(originalTitle, getTitle, getDescription, deadline);
 
         if(success) {
-            if(taskifyApp != null) {
-                JTabbedPane tabbedPane = taskifyApp.getTaskEntries();
-                Component selectedTab = tabbedPane.getSelectedComponent();
-                if(selectedTab instanceof JPanel) {
-                    JPanel taskPanel = (JPanel) selectedTab;
-                    for(Component comp : taskPanel.getComponents()) {
-                        String name = comp.getName();
-                        if(name == null) continue;
-                        switch(name) {
-                            case "titleLabel":
-                                ((JLabel) comp).setText(getTitle);
-                                break;
-                            case "descriptionArea":
-                                ((JTextArea) comp).setText(getDescription);
-                                break;
-                            case "deadlineLabel":
-                                String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(deadline);
-                                ((JLabel) comp).setText(formattedDate);
-                                break;
-                        } 
-                        comp.invalidate();
-                        comp.validate();
-                        comp.repaint();
-                    } 
-                    taskEntries.revalidate();
-                    taskEntries.repaint();
-                    JOptionPane.showMessageDialog(this, "Task updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Selected tab is not a task panel.", "Warning", JOptionPane.WARNING_MESSAGE);
+        // Update the tab title
+        taskEntries.setTitleAt(selectedIndex, getTitle);
+        
+        // Get the task panel
+        JPanel taskPanel = (JPanel) taskEntries.getComponentAt(selectedIndex);
+        
+        // Update the components in the task panel
+        for(Component comp : taskPanel.getComponents()) {
+            if (comp instanceof JLabel) {
+                JLabel label = (JLabel) comp;
+                if ("titleLabel".equals(comp.getName())) {
+                    label.setText(getTitle);
+                } else if ("deadlineLabel".equals(comp.getName())) {
+                    String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(deadline);
+                    label.setText(formattedDate);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Something went wrong. App reference is null.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (comp instanceof JTextArea && "descriptionArea".equals(comp.getName())) {
+                ((JTextArea) comp).setText(getDescription);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update task in the database.", "Error", JOptionPane.ERROR_MESSAGE);
-        } this.dispose();
+        }
+        
+        // Refresh the UI
+        taskPanel.revalidate();
+        taskPanel.repaint();
+        JOptionPane.showMessageDialog(this, "Task updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to update task in the database.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    this.dispose();
+
     }//GEN-LAST:event_confirmButtonActionPerformed
     
     public static void main(String args[]) {
@@ -189,13 +183,6 @@ public class EditTaskWindow extends javax.swing.JFrame {
             System.err.println("Failed to initialize LaF");
         }
         
-        java.awt.EventQueue.invokeLater(() -> {
-            TaskifyApp taskifyApp = new TaskifyApp();
-            taskifyApp.setVisible(true);
-
-            EditTaskWindow displayEditWindow = new EditTaskWindow(taskifyApp);
-            displayEditWindow.setVisible(true);
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

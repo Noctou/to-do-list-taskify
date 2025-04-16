@@ -12,11 +12,14 @@ import java.util.Date;
 import src.PromptWindows.*;
 
 public class TaskifyApp extends javax.swing.JFrame {
-
-    public TaskifyApp() {
+    private String currentUser;
+    
+    public TaskifyApp(String username) {
+        this.currentUser = username;
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Taskify");
+        setTitle("Taskify - " + username);
+        currentUsername.setText(username);
         loadTasksFromDatabase();
         setResizable(false);
     }
@@ -44,13 +47,12 @@ public class TaskifyApp extends javax.swing.JFrame {
         editButton = new javax.swing.JButton();
         calendarPanel = new javax.swing.JPanel();
         calendarContainer = new javax.swing.JPanel();
-        calendar = new com.toedter.calendar.JCalendar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         container.setBackground(new java.awt.Color(39, 39, 39));
 
-        tabPanel.setBackground(new java.awt.Color(51, 51, 51));
+        tabPanel.setBackground(new java.awt.Color(102, 102, 102));
         tabPanel.setForeground(new java.awt.Color(255, 255, 255));
         tabPanel.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         tabPanel.setToolTipText("");
@@ -185,23 +187,15 @@ public class TaskifyApp extends javax.swing.JFrame {
         calendarContainer.setBackground(new java.awt.Color(51, 51, 51));
         calendarContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.ABOVE_TOP));
 
-        calendar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        calendar.setForeground(new java.awt.Color(255, 255, 255));
-        calendar.setToolTipText("");
-        calendar.setDecorationBackgroundColor(new java.awt.Color(102, 102, 102));
-        calendar.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
-        calendar.setSundayForeground(new java.awt.Color(255, 255, 255));
-        calendar.setWeekdayForeground(new java.awt.Color(255, 255, 255));
-
         javax.swing.GroupLayout calendarContainerLayout = new javax.swing.GroupLayout(calendarContainer);
         calendarContainer.setLayout(calendarContainerLayout);
         calendarContainerLayout.setHorizontalGroup(
             calendarContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(calendar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
+            .addGap(0, 990, Short.MAX_VALUE)
         );
         calendarContainerLayout.setVerticalGroup(
             calendarContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(calendar, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+            .addGap(0, 480, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout calendarPanelLayout = new javax.swing.GroupLayout(calendarPanel);
@@ -249,9 +243,8 @@ public class TaskifyApp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTaskButtonActionPerformed
-        AddTaskWindow displayAddWindow = new AddTaskWindow(this);
-        
-        displayAddWindow.setVisible(true);
+        AddTaskWindow addWindow = new AddTaskWindow(this, this.currentUser);
+        addWindow.setVisible(true);
     }//GEN-LAST:event_addTaskButtonActionPerformed
 
     private void removeTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeTaskButtonActionPerformed
@@ -305,7 +298,6 @@ public class TaskifyApp extends javax.swing.JFrame {
         taskPanel.add(deadlineLabel);
 
         taskEntries.addTab(title, taskPanel);
-
         taskEntries.setSelectedComponent(taskPanel);
     }
     
@@ -337,14 +329,13 @@ public class TaskifyApp extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TaskifyApp().setVisible(true);
+                new LogIn().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTaskButton;
-    private com.toedter.calendar.JCalendar calendar;
     private javax.swing.JPanel calendarContainer;
     private javax.swing.JPanel calendarPanel;
     private javax.swing.JPanel container;

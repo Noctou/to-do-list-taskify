@@ -1,5 +1,6 @@
 package src.PromptWindows;
 
+import src.TaskDatabase;
 import java.util.Date;
 import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.UIManager;
@@ -7,13 +8,14 @@ import src.TaskifyApp;
 import javax.swing.*;
 
 public class AddTaskWindow extends javax.swing.JFrame {
-    private TaskifyApp taskifyApp;
+    private TaskifyApp parent;
+    private String currentUser;
 
-
-    public AddTaskWindow(TaskifyApp taskifyApp) {
+    public AddTaskWindow(TaskifyApp taskifyApp, String username) {
         initComponents();
-        setLocationRelativeTo(null);
-        this.taskifyApp = taskifyApp;
+        setLocationRelativeTo(parent);
+        this.parent = taskifyApp;
+        this.currentUser = username;
     }
 
     @SuppressWarnings("unchecked")
@@ -131,25 +133,29 @@ public class AddTaskWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-        String getTitle = titleTextField.getText();
-        String getDescription = descTextArea.getText();
+        String getTitle = titleTextField.getText().trim();
+        String getDescription = descTextArea.getText().trim();
         Date deadline = selectDeadline.getDate();
         
-        if (getTitle == null || getTitle.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Task title cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        } boolean success = true;
-
-        if(success) {
-            if(taskifyApp != null) {
-                taskifyApp.addTaskToPanel(getTitle, getDescription, deadline);
-            } else {
-                System.out.println("TaskifyApp reference is null!");
-            }
+        if (getTitle.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Task title cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    try {
+        // Actually save to database (using the stored currentUsername)
+        boolean success = TaskDatabase.insertTask(getTitle, getDescription, deadline);
+        
+        if (success && parent != null) {
+            parent.addTaskToPanel(getTitle, getDescription, deadline);
+            JOptionPane.showMessageDialog(this, "Task added successfully!");
+            this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Failed to save task to database!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to save task!");
         }
-        this.dispose();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     public static void main(String args[]) {
@@ -162,10 +168,10 @@ public class AddTaskWindow extends javax.swing.JFrame {
         }
 
         java.awt.EventQueue.invokeLater(() -> {
-            TaskifyApp taskifyApp = new TaskifyApp();
+            TaskifyApp taskifyApp = new TaskifyApp("testuser");
             taskifyApp.setVisible(true);
 
-            AddTaskWindow addWindow = new AddTaskWindow(taskifyApp);
+            AddTaskWindow addWindow = new AddTaskWindow(taskifyApp, "testuser");
             addWindow.setVisible(true);
         });
     }

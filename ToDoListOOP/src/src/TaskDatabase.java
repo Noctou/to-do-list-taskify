@@ -24,7 +24,7 @@ public class TaskDatabase {
     }
     
     public static boolean insertTask(String title, String description, Date deadline) {
-        String insertSQL = "INSERT INTO task (taskTitle, taskDescription, taskDeadline) VALUES (?, ?, ?);";
+        String insertSQL = "INSERT INTO task (taskTitle, taskDescription, taskDeadline) VALUES (?, ?, ?)";
         
         if (taskExists(title)) {
             return false;
@@ -35,16 +35,13 @@ public class TaskDatabase {
 
             query.setString(1, title);
             query.setString(2, description);
-
-            if (deadline != null) {
-                java.sql.Date sqlDate = new java.sql.Date(deadline.getTime());
-                query.setDate(3, sqlDate);
-            } else {
-                query.setNull(3, java.sql.Types.DATE);
-            } int rowsAffected = query.executeUpdate();
-            return rowsAffected > 0;
+            query.setDate(3, deadline != null ? new java.sql.Date(deadline.getTime()) : null);
+           
+            query.executeUpdate();
+            return true;
+            
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Database error: " + e.getMessage());
             return false;
         }
     }
