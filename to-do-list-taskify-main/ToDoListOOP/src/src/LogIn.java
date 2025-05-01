@@ -15,42 +15,34 @@ public class LogIn extends javax.swing.JFrame {
         initComponents();
         
         try {
-     
-        String imagePath = "src\\images\\todolist.png"; 
-        logoIcon = new ImageIcon(imagePath);
-        
-        if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
-            // Get original image dimensions
-            int originalWidth = logoIcon.getIconWidth();
-            int originalHeight = logoIcon.getIconHeight();
-            
-            // Calculate scaled dimensions while maintaining aspect ratio
-            int scaledWidth = 200; // Your desired width
-            int scaledHeight = (int)((double)originalHeight/originalWidth * scaledWidth);
-            
-            // Scale the image
-            Image scaledImage = logoIcon.getImage().getScaledInstance(
-                scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
-            logo.setIcon(new ImageIcon(scaledImage));
-            logo.setText(""); // Remove the text
-            
-            // Adjust the JLabel size to match the image
-            logo.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
+            String imagePath = "src\\images\\todolist.png"; 
+            logoIcon = new ImageIcon(imagePath);
+            if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
+                int originalWidth = logoIcon.getIconWidth();
+                int originalHeight = logoIcon.getIconHeight();
+
+                int scaledWidth = 200;
+                int scaledHeight = (int)((double)originalHeight/originalWidth * scaledWidth);
+
+                Image scaledImage = logoIcon.getImage().getScaledInstance(
+                    scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+                logo.setIcon(new ImageIcon(scaledImage));
+                logo.setText("");
+
+                logo.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading logo: " + e.getMessage());
+            logo.setText("Logo");
         }
-    } catch (Exception e) {
-        System.err.println("Error loading logo: " + e.getMessage());
-        logo.setText("Logo"); // Fallback text
-    }
-        
         setLocationRelativeTo(null);
-        setTitle("Taskify Log In");
+        setTitle("Log In");
         registerLinkActionPerformed();
         togglePasswordVisibility();
         passwordFieldFocusListener();
         
         container.revalidate();
         container.repaint();
-        
     }
    
     @SuppressWarnings("unchecked")
