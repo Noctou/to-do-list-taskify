@@ -81,12 +81,10 @@ public class EditTaskWindow extends javax.swing.JFrame {
         containerLayout.setHorizontalGroup(
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(titleLabel)
-                    .addComponent(descLabel))
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(containerLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(titleLabel)
                         .addGap(25, 25, 25)
                         .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(cancelButton)
@@ -99,7 +97,9 @@ public class EditTaskWindow extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(containerLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGap(21, 21, 21)
+                        .addComponent(descLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(titleField, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -182,20 +182,15 @@ public class EditTaskWindow extends javax.swing.JFrame {
         boolean success = TaskDatabase.updateTask(originalTitle, getTitle, getDescription, deadline);
 
         if(success) {
-            // Update the tab title
             taskEntries.setTitleAt(selectedIndex, getTitle);
 
-            // Remove old entry from maps
             taskifyApp.removeTaskFromMaps(originalTitle);
 
-            // Create updated Task object
             Task updatedTask = new Task(getTitle, getDescription, new java.sql.Timestamp(deadline.getTime()));
             taskifyApp.addTaskToMaps(updatedTask);
 
-            // Get the task panel
             JPanel taskPanel = (JPanel) taskEntries.getComponentAt(selectedIndex);
 
-            // Update panel components (UI)
             for(Component comp : taskPanel.getComponents()) {
                 if (comp instanceof JLabel) {
                     JLabel label = (JLabel) comp;
@@ -209,11 +204,8 @@ public class EditTaskWindow extends javax.swing.JFrame {
                     ((JTextArea) comp).setText(getDescription);
                 }
             }
-
-            // Refresh calendar highlights
             taskifyApp.refreshCalendarHighlighting();
 
-            // Refresh UI
             taskPanel.revalidate();
             taskPanel.repaint();
 

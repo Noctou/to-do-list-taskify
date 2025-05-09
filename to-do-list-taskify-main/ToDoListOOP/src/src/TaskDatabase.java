@@ -108,7 +108,6 @@ public class TaskDatabase {
         return tasks;
     }
 
-    // Get tasks for a specific date
     public static List<Task> getTasksForDate(LocalDate date) {
         String sql = "SELECT * FROM task WHERE taskDeadline = ?";
         List<Task> tasks = new ArrayList<>();
@@ -133,7 +132,6 @@ public class TaskDatabase {
         return tasks;
     }
 
-    // Get all tasks (for calendar overview)
     public static List<Task> getAllTasks() {
         String sql = "SELECT * FROM task";
         List<Task> tasks = new ArrayList<>();
