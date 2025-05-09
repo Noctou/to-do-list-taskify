@@ -156,10 +156,10 @@ public class EditTaskWindow extends javax.swing.JFrame {
         String getDescription = descTextArea.getText();
         Date deadline = selectDeadline.getDate();
         
-        if (getTitle == null || getTitle.trim().isEmpty()) {
+        if(getTitle == null || getTitle.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Task title cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } if (deadline == null) {
+        } if(deadline == null) {
             JOptionPane.showMessageDialog(this, "Please select a valid deadline date!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -192,19 +192,18 @@ public class EditTaskWindow extends javax.swing.JFrame {
             JPanel taskPanel = (JPanel) taskEntries.getComponentAt(selectedIndex);
 
             for(Component comp : taskPanel.getComponents()) {
-                if (comp instanceof JLabel) {
+                if(comp instanceof JLabel) {
                     JLabel label = (JLabel) comp;
-                    if ("titleLabel".equals(comp.getName())) {
+                    if("titleLabel".equals(comp.getName())) {
                         label.setText(getTitle);
-                    } else if ("deadlineLabel".equals(comp.getName())) {
+                    } else if("deadlineLabel".equals(comp.getName())) {
                         String formattedDate = new SimpleDateFormat("dd/MM/yyyy").format(deadline);
                         label.setText(formattedDate);
                     }
-                } else if (comp instanceof JTextArea && "descriptionArea".equals(comp.getName())) {
+                } else if(comp instanceof JTextArea && "descriptionArea".equals(comp.getName())) {
                     ((JTextArea) comp).setText(getDescription);
                 }
-            }
-            taskifyApp.refreshCalendarHighlighting();
+            } taskifyApp.refreshCalendarHighlighting();
 
             taskPanel.revalidate();
             taskPanel.repaint();
@@ -213,19 +212,16 @@ public class EditTaskWindow extends javax.swing.JFrame {
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Failed to update task in the database.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        this.dispose();
+        } this.dispose();
     }//GEN-LAST:event_confirmButtonActionPerformed
     
     public static void main(String args[]) {
         FlatDarkLaf.setup();
-
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (Exception ex) {
             System.err.println("Failed to initialize LaF");
         }
-        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
