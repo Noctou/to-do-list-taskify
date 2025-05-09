@@ -299,7 +299,6 @@ public class TaskifyApp extends javax.swing.JFrame {
 
                 JOptionPane.showMessageDialog(this, "Task deleted successfully.");
 
-                // Crucially, refresh the calendar highlighting here
                 refreshCalendarHighlighting();
 
             } else {
@@ -314,7 +313,7 @@ public class TaskifyApp extends javax.swing.JFrame {
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         Task selectedTask = getCurrentlySelectedTask();
         if (selectedTask != null) {
-            new EditTaskWindow(this, selectedTask).setVisible(true); // Modify this line
+            new EditTaskWindow(this, selectedTask).setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a task first!");
         }
@@ -331,7 +330,6 @@ public class TaskifyApp extends javax.swing.JFrame {
         if (selectedIndex == -1) return null;
 
         String title = taskEntries.getTitleAt(selectedIndex);
-        // Implement logic to find the Task object by title
         for (List<Task> taskList : tasksByDate.values()) {
             for (Task task : taskList) {
                 if (task.getTitle().equals(title)) {
@@ -403,14 +401,10 @@ public class TaskifyApp extends javax.swing.JFrame {
                 String description = resultSet.getString("taskDescription");
                 java.sql.Date deadline = resultSet.getDate("taskDeadline");
 
-        // Create new Task object here
                 Task task = new Task(title, description, new java.sql.Timestamp(deadline.getTime())); // ✅
 
-
-        // Add to tasksByTitle map
                 tasksByTitle.put(title, task);
 
-        // Add to both the UI and tasksByDate map
                 addTaskToPanel(task);
     
         if (deadline != null) {
@@ -427,14 +421,10 @@ public class TaskifyApp extends javax.swing.JFrame {
 }
     
     private void updateCalendarDisplay() {
-        // Add date evaluator to highlight task dates
-        // For older JCalendar versions:
         calendar.getDayChooser().addDateEvaluator(new TaskDateEvaluator(tasksByDate));
 
-        // Refresh calendar UI
         calendar.updateUI();
 
-        // Add click listener for dates
         calendar.addPropertyChangeListener("calendar", evt -> {
             Date selectedDate = calendar.getDate();
             if (selectedDate != null) {
@@ -463,7 +453,6 @@ public class TaskifyApp extends javax.swing.JFrame {
 }
 
     private void openTaskDetails(Task task) {
-        // Reuse your existing edit window or create a new one
         EditTaskWindow editWindow = new EditTaskWindow(this, task);
         editWindow.setVisible(true);
 }
@@ -486,9 +475,8 @@ public class TaskifyApp extends javax.swing.JFrame {
 
     public class TaskDateEvaluator implements com.toedter.calendar.IDateEvaluator {
     private Date currentDateBeingEvaluated;
-    private Map<LocalDate, List<Task>> tasksByDate; // Add this line
-
-    public TaskDateEvaluator(Map<LocalDate, List<Task>> tasksByDate) { // Modify constructor
+    private Map<LocalDate, List<Task>> tasksByDate;
+    public TaskDateEvaluator(Map<LocalDate, List<Task>> tasksByDate) {
         this.tasksByDate = tasksByDate;
     }
 
@@ -538,20 +526,18 @@ public class TaskifyApp extends javax.swing.JFrame {
 }
     
     public void refreshCalendarHighlighting() {
-    loadAllTasksForCalendar(); // Reload all tasks needed for highlighting
+    loadAllTasksForCalendar();
 
-    // Temporarily set the calendar to a different date and then back
     Date currentDate = calendar.getDate();
     Calendar tempCal = Calendar.getInstance();
-    tempCal.add(Calendar.DAY_OF_MONTH, 1); // Move one day forward
+    tempCal.add(Calendar.DAY_OF_MONTH, 1);
     calendar.setDate(tempCal.getTime());
-    calendar.setDate(currentDate); // Set it back to the original date
+    calendar.setDate(currentDate);
 
-    // Add the new DateEvaluator
     calendar.getDayChooser().addDateEvaluator(new TaskDateEvaluator(tasksByDate));
 
-    calendar.getDayChooser().repaint(); // Repaint the DayChooser
-    calendar.repaint(); // Repaint the entire calendar
+    calendar.getDayChooser().repaint();
+    calendar.repaint();
 }
     
     private void loadAllTasksForCalendar() {

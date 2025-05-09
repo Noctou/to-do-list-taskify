@@ -17,7 +17,6 @@ public class AddTaskWindow extends javax.swing.JFrame {
     public AddTaskWindow(TaskifyApp taskifyApp, String username) {
         initComponents();
 
-        // 🛠 Custom configuration goes here
         SpinnerDateModel timeModel = new SpinnerDateModel();
         timeSpinner.setModel(timeModel);
 
@@ -107,16 +106,15 @@ public class AddTaskWindow extends javax.swing.JFrame {
         containerLayout.setHorizontalGroup(
             containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(containerLayout.createSequentialGroup()
-                        .addGap(22, 22, 22)
                         .addComponent(taskTitleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(containerLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
                         .addComponent(descLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(selectDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scrollableTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -199,8 +197,7 @@ public class AddTaskWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a valid date and time!");
             return;
         }
-
-        // Merge date and time properly
+        
         Calendar finalCal = Calendar.getInstance();
         finalCal.setTime(selectedDate);
 
